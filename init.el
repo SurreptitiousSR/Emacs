@@ -43,27 +43,34 @@
   (elpaca-use-package-mode)
   (setq elpaca-use-package-by-default t))
       
-
 ;;Evil mode
 (use-package evil
-    :init
-    (setq evil-want-keybinding nil)
-    (setq evil-vsplit-window-right t)
-    (evil-mode))
+   :init
+   (setq evil-want-keybinding nil)
+   (setq evil-vsplit-window-right t)
+   (evil-mode))
 (use-package evil-collection
-    :after evil
-    :config
-    (setq evil-collection-mode-list '(dashboard dired ibuffer))
-    (evil-collection-init))
+   :after evil
+   :config
+   (setq evil-collection-mode-list '(dashboard dired ibuffer))
+   (evil-collection-init))
+
+;; Ivy - Generic completion
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode)
+  (setopt ivy-use-virtual-buffers t)
+  (setopt enable-recursive-minibuffers t))
 
 ;; UI adjustments
 (use-package exotica-theme
-    :ensure t
-    :load-path "themes"
-    :init
-    (setq exotica-theme t)
-    :config
-    (load-theme 'exotica t))
+   :ensure t
+   :load-path "themes"
+   :init
+   (setq exotica-theme t)
+   :config
+   (load-theme 'exotica t))
 
 ;; Remove menu-bar / scroll-bar / tool-bar
 (menu-bar-mode -1)
@@ -72,7 +79,6 @@
 
 ;; Start Emacs fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
-
 
 
 
