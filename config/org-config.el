@@ -1,0 +1,12 @@
+
+;; Modify orgmode TODO states
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE")))
+
+;; Make org indent things properly
+(add-hook 'org-mode-hook (lambda () (org-indent-mode)))
+
+;; Org capture prefix setup
+(define-prefix-command 'my-org-capture-map)
+(global-set-key (kbd "C-c c") 'my-org-capture-map)
+(define-key my-org-capture-map (kbd "c") 'org-capture)

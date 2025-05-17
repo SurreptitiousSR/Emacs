@@ -1,6 +1,7 @@
 ;; Addd the .emacs.d/config directory to the load path
-;;(add-to-list 'load-path "~/.emacs.d/config")
-;;(load "org-config")
+(add-to-list 'load-path "~/.emacs.d/config")
+(load "org-config")
+(load "key-bindings")
 
 ;; Set the default directory
 (setq default-directory "~/Documents/org")
@@ -13,11 +14,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-capture-templates
-   '(("c" "LOG ENTRY" entry
-      (file+headline "~/Documents/logbook.org" "LOG")
-      "* LOG ENTRY %? %t\12 %i\12 %a")) t)
- '(package-selected-packages nil))
+ )
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -115,13 +113,3 @@
 ;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
-;; Modify orgmode TODO states
-(setq org-todo-keywords
-      '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "DELEGATED" "MEET")))
-
-;; Make org indent things properly
-(add-hook 'org-mode-hook (lambda () (org-indent-mode)))
-
-;; Keybinds
-(global-set-key (kbd "C-S-x") 'recentf-open-files)
-(global-set-key (kbd "C-c a") 'org-agenda) 
