@@ -1,162 +1,127 @@
-;; Elpaca Package Manager
-(defvar elpaca-installer-version 0.11)
-(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1 :inherit ignore
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (<= emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                  ,@(when-let* ((depth (plist-get order :depth)))
-                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                  ,(plist-get order :repo) ,repo))))
-                  ((zerop (call-process "git" nil buffer t "checkout"
-                                        (or (plist-get order :ref) "--"))))
-                  (emacs (concat invocation-directory invocation-name))
-                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                  ((require 'elpaca))
-                  ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
-(add-hook 'after-init-hook #'elpaca-process-queues)
-(elpaca `(,@elpaca-order))
+;; Addd the .emacs.d/config directory to the load path
+;;(add-to-list 'load-path "~/.emacs.d/config")
+;;(load "org-config")
 
-;; Setup use-package
-(elpaca elpaca-use-package
-  (elpaca-use-package-mode)
-  (setq elpaca-use-package-by-default t))
-      
-;;Evil mode
-(use-package evil
-   :ensure t
-   :init
-   (setq evil-want-keybinding nil)
-   (setq evil-vsplit-window-right t)
-   (evil-mode))
+;; Set the default directory
+(setq default-directory "~/Documents/org")
+(setq dired-default-directory "~/Documents/org/")
+;; Set the initial buffer's default directory on startup
+(setq initial-buffer-choice default-directory)
 
-(use-package evil-collection
-   :ensure t
-   :after evil
-   :config
-   (setq evil-collection-mode-list '(dashboard dired ibuffer))
-   (evil-collection-init))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-capture-templates
+   '(("c" "LOG ENTRY" entry
+      (file+headline "~/Documents/logbook.org" "LOG")
+      "* LOG ENTRY %? %t\12 %i\12 %a")) t)
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "gray23" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 102 :width normal :foundry "outline" :family "MartianMono NFM")))))
 
-;; Ivy - Generic completion
-(use-package ivy
-  :ensure t
-  :config
-  (ivy-mode)
-  (setopt ivy-use-virtual-buffers t)
-  (setopt enable-recursive-minibuffers t)
-  (keymap-global-set "C-s" #'swiper-isearch)
-  (keymap-global-set "C-c C-r" #'ivy-resume)
-  (keymap-global-set "<f6>" #'ivy-resume)
-  (keymap-global-set "M-x" #'counsel-M-x)
-  (keymap-global-set "C-x C-f" #'counsel-find-file)
-  (keymap-global-set "<f1> f" #'counsel-describe-function)
-  (keymap-global-set "<f1> v" #'counsel-describe-variable)
-  (keymap-global-set "<f1> o" #'counsel-describe-symbol)
-  (keymap-global-set "<f1> l" #'counsel-find-library)
-  (keymap-global-set "<f2> i" #'counsel-info-lookup-symbol)
-  (keymap-global-set "<f2> u" #'counsel-unicode-char)
-  (keymap-global-set "C-c g" #'counsel-git)
-  (keymap-global-set "C-c j" #'counsel-git-grep)
-  (keymap-global-set "C-c k" #'counsel-ag)
-  (keymap-global-set "C-x l" #'counsel-locate)
-  (keymap-global-set "C-S-o" #'counsel-rhythmbox)
-  (keymap-set minibuffer-local-map "C-r" #'counsel-minibuffer-history))
+;; Set up package.el to work with MELPA
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
+(package-refresh-contents)
 
-(use-package ivy-rich
-  :ensure t
-  :after
-  ivy
-  counsel
-  :config
-  (ivy-rich-mode 1)
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
-  
+;; (EVIL MODE START
+;; Download Evil
+(unless (package-installed-p 'evil)
+  (package-install 'evil))
 
-;; Make sure counsel is loaded after ivy
-(elpaca-wait)
-
-(use-package counsel
-  :ensure t
-  :after ivy
-  :config
-  (counsel-mode 1))
+;; Enable Evil
+(require 'evil)
+(evil-mode 1)
+;; EVIL MODE FINISH)
 
 
-;; All the icons - prettier icons in the minibuffer
-(use-package all-the-icons
-  :if (display-graphic-p))
+;; Add vterm a terminal emulator
+(unless (package-installed-p 'vterm)
+  (package-install 'vterm))
 
-;; Add all-the-icons to Dired
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda ()
-  (all-the-icons-dired-mode t))))
 
-;; Flycheck - syntax checking on the fly
-(use-package flycheck
-  :ensure t
-  :defer t
-  :diminish
-  :init
-  (global-flycheck-mode))
+;; (UI / MINIBUFFER IMPROVEMENTS START
+;; Download ivy (consel pulls in ivy and swiper as well)
+(unless (package-installed-p 'counsel)
+  (package-install 'counsel))
 
-;; Turn on which-key - gives more information about keymaps
-(which-key-mode 1)
+;; Enable ivy
+(require 'ivy)
+(ivy-mode)
+(setopt ivy-use-virtual-buffers t)
+(setopt enable-recursive-minibuffers t)
 
-;; UI adjustments
-(use-package exotica-theme
-  :ensure t
-  :load-path "themes"
-  :init
-  (setq exotica-theme t)
-  :config
-  (load-theme 'exotica t))
+;; Enable counsel - replaces a bunch of standard keybinding
+(counsel-mode)
 
-;; (use-package zenburn-theme
-;;   :ensure t
-;;   :load-path "themes"
-;;   :config
-;;   (load-theme 'zenburn t))
+;; Download ivy-rich (better minibuffer formatting)
+(unless (package-installed-p 'ivy-rich)
+  (package-install 'ivy-rich))
 
-;; (use-package solarized-theme
-;;   :ensure t
-;;   :load-path "themes"
-;;   :config
-;;   (load-theme 'solarized t)
+;; Enable ivy-rich
+(require 'ivy-rich)
+(ivy-rich-mode 1)
 
-;; Remove menu-bar / scroll-bar / tool-bar
+;; Download all-the-icons
+(unless (package-installed-p 'all-the-icons)
+  (package-install 'all-the-icons))
+
+(unless (package-installed-p 'all-the-icons-dired)
+  (package-install 'all-the-icons-dired))
+
+(unless (package-installed-p 'all-the-icons-ivy-rich)
+  (package-install 'all-the-icons-ivy-rich))
+
+;; Run all-the-icons
+(when (display-graphic-p)
+  (require 'all-the-icons))
+;; Don't forget to install the resource fonts with M-x all-the-icons-install-fonts
+ 
+;; Enable all the icons at startup
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(all-the-icons-ivy-rich-mode 1)
+
+;; Download orgmode bullets - nicer than asterisks
+(unless (package-installed-p 'org-bullets)
+  (package-install 'org-bullets))
+
+;; Enable orgmode bullets
+
+;; (UI / MINIBUFFER IMPROVEMENTS FINISH)
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+
+;; (DISABLE ANNOYING THINGS START
+;; Disable annoying bell
+(setq visible-bell 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+;; DISABLE ANNOYING THINGS FINISH)
 
-;; Start Emacs fullscreen
+
+;; Enable recentf mode that maintains a list of recently opened files
+(recentf-mode 1)
+
+;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
-;; Display line numbers
-(global-display-line-numbers-mode 1)
+;; Modify orgmode TODO states
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "DELEGATED" "MEET")))
 
-;; Orgmode bullets
-(use-package org-bullets
-  :ensure t
-  :init
-  (org-bullets-mode))
+;; Make org indent things properly
+(add-hook 'org-mode-hook (lambda () (org-indent-mode)))
+
+;; Keybinds
+(global-set-key (kbd "C-S-x") 'recentf-open-files)
+(global-set-key (kbd "C-c a") 'org-agenda) 
