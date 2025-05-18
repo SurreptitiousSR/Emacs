@@ -1,7 +1,7 @@
 ;; Addd the .emacs.d/config directory to the load path
 (add-to-list 'load-path "~/.emacs.d/config")
-(load "org-config")
 (load "key-bindings")
+(load "org-config")
 
 ;; Set the default directory
 (setq default-directory "~/Documents/org")
@@ -14,7 +14,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(package-selected-packages nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -58,6 +58,9 @@
 
 (unless (package-installed-p 'org-bullets)
   (package-install 'org-bullets))
+
+(unless (package-installed-p 'org-roam)
+  (package-install 'org-roam))
 
 ;;******************************************************
 ;;Load packages / set modes
