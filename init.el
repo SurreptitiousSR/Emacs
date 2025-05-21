@@ -16,7 +16,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "gray23" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 102 :width normal :foundry "outline" :family "MartianMono NFM")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#0D1117" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 105 :width normal :foundry "UKWN" :family "MartianMono Nerd Font Mono")))))
 
 
 ;;******************************************************
