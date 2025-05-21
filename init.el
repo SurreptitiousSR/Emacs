@@ -1,8 +1,3 @@
-;; Addd the .emacs.d/config directory to the load path
-(add-to-list 'load-path "~/.emacs.d/config")
-(load "key-bindings")
-(load "org-config")
-
 ;; Set the default directory
 (setq default-directory "~/Documents/org")
 (setq dired-default-directory "~/Documents/org/")
@@ -100,3 +95,8 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
+;;******************************************************
+;; LOAD ADDITIONAL FILES
+(add-to-list 'load-path "~/.emacs.d/config")
+(load "key-bindings")
+(load "org-config")
