@@ -44,7 +44,6 @@
   (setq recentf-max-saved-items 100
 	recentf-save-file (expand-file-name "recentf" user-emacs-directory)))
 
->>>>>>> home
 (use-package ivy
   :ensure t
   :config
@@ -52,28 +51,6 @@
   (setopt ivy-use-virtual-buffers t)
   (setopt enable-recursive-minibuffers t))
 
-<<<<<<< HEAD
-;; UI adjustments
-(use-package exotica-theme
-   :ensure t
-   :load-path "themes"
-   :init
-   (setq exotica-theme t)
-   :config
-   (load-theme 'exotica t))
-
-;; Remove menu-bar / scroll-bar / tool-bar
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-
-;; Start Emacs fullscreen
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
-
-
-
-
-=======
 (use-package counsel
   :ensure t
   :after ivy
