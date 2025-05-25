@@ -1,9 +1,3 @@
-;; Set the default directory
-(setq default-directory "~/Documents/org")
-(setq dired-default-directory "~/Documents/org/")
-;; Set the initial buffer's default directory on startup
-(setq initial-buffer-choice default-directory)
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -18,71 +12,112 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :extend nil :stipple nil :background "#0D1117" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 105 :width normal :foundry "UKWN" :family "MartianMono Nerd Font Mono")))))
 
-
 ;;******************************************************
-;; Set up package.el to work with MELPA
+;; SET UP PACKAGE.EL TO WORK WITH MELPA
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 (package-refresh-contents)
 
+;;******************************************************
+;; SETUP USE-PACKAGE
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
 
 ;;******************************************************
 ;; Packages
-(unless (package-installed-p 'evil)
-  (package-install 'evil))
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1))
 
-(unless (package-installed-p 'vterm)
-  (package-install 'vterm))
+(use-package vterm)
 
-(unless (package-installed-p 'counsel)
-  (package-install 'counsel))
+(use-package recentf
+  :ensure nil
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-saved-items 100
+	recentf-save-file (expand-file-name "recentf" user-emacs-directory)))
 
-(unless (package-installed-p 'ivy-rich)
-  (package-install 'ivy-rich))
+(use-package ivy
+  :ensure t
+  :config
+  (ivy-mode)
+  (setopt ivy-use-virtual-buffers t)
+  (setopt enable-recursive-minibuffers t))
 
-(unless (package-installed-p 'all-the-icons)
-  (package-install 'all-the-icons))
+(use-package counsel
+  :ensure t
+  :after ivy
+  :bind* ; load when pressed
+  (("M-x"     . counsel-M-x)
+   ("C-s"     . swiper)
+   ("C-x C-f" . counsel-find-file)
+   ("C-x C-r" . counsel-recentf)  ; search for recently edited
+   ("C-c g"   . counsel-git)      ; search for files in git repo
+   ("C-c j"   . counsel-git-grep) ; search for regexp in git repo
+   ("C-c /"   . counsel-ag)       ; Use ag for regexp
+   ("C-x l"   . counsel-locate)
+   ("C-x C-f" . counsel-find-file)
+   ("<f1> f"  . counsel-describe-function)
+   ("<f1> v"  . counsel-describe-variable)
+   ("<f1> l"  . counsel-find-library)
+   ("<f2> i"  . counsel-info-lookup-symbol)
+   ("<f2> u"  . counsel-unicode-char)
+   ("C-c C-r" . ivy-resume)))     ; Resume last Ivy-based completion
 
-(unless (package-installed-p 'all-the-icons-dired)
-  (package-install 'all-the-icons-dired))
+(use-package ivy-rich
+  :ensure t
+  :config
+  (ivy-rich-mode 1))
 
-(unless (package-installed-p 'all-the-icons-ivy-rich)
-  (package-install 'all-the-icons-ivy-rich))
+(use-package all-the-icons
+  :ensure t
+  :if (display-graphic-p))
 
-(unless (package-installed-p 'org-bullets)
-  (package-install 'org-bullets))
+(use-package all-the-icons-dired
+  :ensure t
+  :hook (dired-mode . all-the-icons-dired-mode))
 
-(unless (package-installed-p 'org-roam)
-  (package-install 'org-roam))
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :config
+  (all-the-icons-ivy-rich-mode 1))
 
-;;******************************************************
-;;Load packages / set modes
-(require 'evil)
-(evil-mode 1)
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode))
 
-(require 'ivy)
-(ivy-mode)
-(setopt ivy-use-virtual-buffers t)
-(setopt enable-recursive-minibuffers t)
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-vb2-ack t)
+  :custom
+  (org-roam-directory "~/Nextcloud/Documents/roam")
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert))
+  :config
+  (org-roam-setup))  
 
-(counsel-mode)
+(use-package vertico
+  :ensure t
+  :config
+  (vertico-mode 1))
 
-(require 'ivy-rich)
-(ivy-rich-mode 1)
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
-(when (display-graphic-p)
-  (require 'all-the-icons))
-
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-(all-the-icons-ivy-rich-mode 1)
-
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-(recentf-mode 1)
-
+(use-package magit
+  :ensure t)
 ;;******************************************************
 ;; UI TWEAKS
 (setq visible-bell 1)
@@ -96,7 +131,12 @@
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
 ;;******************************************************
-;; LOAD ADDITIONAL FILES
+;; LOAD ADDITIONAL FILES / SET DIRECTORIES
 (add-to-list 'load-path "~/.emacs.d/config")
 (load "key-bindings")
 (load "org-config")
+
+
+(setq default-directory "~/Nextcloud/Documents/")
+(setq dired-default-directory "~/Nextcloud/Documents/")
+(setq initial-buffer-choice default-directory)
