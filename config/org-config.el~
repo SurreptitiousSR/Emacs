@@ -1,4 +1,0 @@
-;; Org capture prefix setup
-(define-prefix-command 'my-org-capture-map)
-(global-set-key (kbd "C-c c") 'my-org-capture-map)
-(define-key my-org-capture-map (kbd "c") 'org-capture)
