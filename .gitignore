@@ -1,0 +1,10 @@
+.local/
+.org-id-locations
+auto-save-list/
+bookmarks~
+eln-cache/
+elpa/
+elpaca/
+org-roam.db
+recentf
+transient
