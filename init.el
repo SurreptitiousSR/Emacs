@@ -48,6 +48,17 @@
   (setq recentf-max-saved-items 100
 	recentf-save-file (expand-file-name "recentf" user-emacs-directory)))
 
+(use-package flyspell
+  :ensure nil
+  :hook
+  ((text-mode . flyspell-mode)))
+
+(use-package org
+  :ensure nil
+  :hook
+  ((org-mode . org-indent-mode)
+   (org-mode . visual-line-mode)))
+
 (use-package ivy
   :ensure t
   :config
