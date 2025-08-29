@@ -3,14 +3,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(elpy vterm vertico org-roam org-bullets orderless magit evil counsel all-the-icons-ivy-rich all-the-icons-dired)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#0D1117" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 105 :width normal :foundry "UKWN" :family "MartianMono Nerd Font Mono")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "#0D1117" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 130 :width normal :foundry "UKWN" :family "MartianMono Nerd Font Mono")))))
 
 ;;******************************************************
 ;; SET UP PACKAGE.EL TO WORK WITH MELPA
@@ -18,7 +19,8 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
-(package-refresh-contents)
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;;******************************************************
 ;; SETUP USE-PACKAGE
@@ -35,7 +37,10 @@
   :config
   (evil-mode 1))
 
-(use-package vterm)
+(use-package vterm
+  :ensure t
+  :hook (vterm-mode . (lambda()
+		    (evil-local-mode -1))))
 
 (use-package recentf
   :ensure nil
@@ -118,6 +123,24 @@
 
 (use-package magit
   :ensure t)
+
+(use-package elpy
+  :ensure t
+  :init 
+  (elpy-enable))
+
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :bind (("C-x C-j" . dired-jump))
+  :config
+  (when (string= system-type "darwin")
+    (let ((gls (executable-find "gls")))
+      (when gls
+        (setq dired-use-ls-dired t
+              insert-directory-program gls
+              dired-listing-switches "-aBhl --group-directories-first")))))   
+
 ;;******************************************************
 ;; UI TWEAKS
 (setq visible-bell 1)
