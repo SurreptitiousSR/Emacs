@@ -142,8 +142,7 @@
 ;; Force the dispatcher menu into the current window instead of splitting
 (add-to-list 'display-buffer-alist
              '(" \\*Agenda Commands\\*" (display-buffer-same-window)))
-;; Cleaner agenda dispatcher layout
-(setq org-agenda-menu-two-columns nil)
+;; Hide matcher regex from agenda dispatcher
 (setq org-agenda-menu-show-matcher nil)
 
 ;; Modify orgmode TODO states
