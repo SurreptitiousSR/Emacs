@@ -135,7 +135,7 @@
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
 ;; Start EMACS in fullscreen
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Modify orgmode TODO states
 (setq org-todo-keywords
