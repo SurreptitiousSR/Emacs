@@ -3,11 +3,11 @@
 (load "org-config")
 
 (with-eval-after-load 'org
-    (setq org-directory "C:/Users/Samuel.Attwell/Documents/org/"))
+    (setq org-directory "C:/Users/SAttwell/Documents/org/"))
 
 ;; Set the default directory
-(setq default-directory "C:/Users/Samuel.Attwell/Documents/org")
-(setq dired-default-directory "C:/Users/Samuel.Attwell/Documents/org/")
+(setq default-directory "C:/Users/SAttwell/Documents/org")
+(setq dired-default-directory "C:/Users/SAttwell/Documents/org/")
 ;; Set the initial buffer's default directory on startup
 (setq initial-buffer-choice default-directory)
 
@@ -19,17 +19,16 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("c:/Users/Samuel.Attwell/Documents/org/7f2.logbook.org"
-     "c:/Users/Samuel.Attwell/Documents/org/9g1.logbook.org"
-     "c:/Users/Samuel.Attwell/Documents/org/10ats1.logbook.org"
-     "c:/Users/Samuel.Attwell/Documents/org/10f1.logbook.org"
-     "c:/Users/Samuel.Attwell/Documents/org/departmental.org"
-     "c:/Users/Samuel.Attwell/Documents/org/ks3.org"
-     "c:/Users/Samuel.Attwell/Documents/org/7g3.logbook.org"
-     "c:/Users/Samuel.Attwell/Documents/org/8f1.logbook.org"))
+   '("c:/Users/SAttwell/Documents/org/7l2.logbook.org"
+     "c:/Users/SAttwell/Documents/org/7s2.logbook.org"
+     "c:/Users/SAttwell/Documents/org/9s1.logbook.org"
+     "c:/Users/SAttwell/Documents/org/10s6.logbook.org"
+     "c:/Users/SAttwell/Documents/org/11s8.logbook.org"
+     "c:/Users/SAttwell/Documents/org/departmental.org"
+     "c:/Users/SAttwell/Documents/org/ks3.org"))
  '(org-capture-templates
    '(("c" "LOG ENTRY" entry
-      (file+headline "C:/Users/Samuel.Attwell/Documents/logbook.org"
+      (file+headline "C:/Users/SAttwell/Documents/logbook.org"
 		     "LOG")
       "* LOG ENTRY %? %t\12 %i\12 %a")) t)
  '(package-selected-packages
