@@ -23,12 +23,11 @@
      "c:/Users/SAttwell/Documents/org/9s1.logbook.org"
      "c:/Users/SAttwell/Documents/org/11s8.logbook.org"
      "c:/Users/SAttwell/Documents/org/7s2.logbook.org"
-     "c:/Users/SAttwell/Documents/org/7l2.logbook.org"
-     "c:/Users/SAttwell/Documents/org/teaching.org"))
+     "c:/Users/SAttwell/Documents/org/7l2.logbook.org"))
  '(org-capture-templates
    '(("c" "LOG ENTRY" entry
       (file+headline "C:/Users/SAttwell/Documents/logbook.org" "LOG")
-      "* LOG ENTRY %? %t\12 %i\12 %a")))
+      "* LOG ENTRY %? %t\12 %i\12 %a")) t)
  '(package-selected-packages
    '(all-the-icons-dired all-the-icons-ivy all-the-icons-ivy-rich
 			 all-the-icons-nerd-fonts counsel evil
@@ -136,6 +135,12 @@
 
 ;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; Org agenda opens in full window
+(setq org-agenda-window-setup 'only-window)
+;; Cleaner agenda dispatcher layout
+(setq org-agenda-menu-two-columns t)
+(setq org-agenda-menu-show-matcher nil)
 
 ;; Modify orgmode TODO states
 (setq org-todo-keywords
