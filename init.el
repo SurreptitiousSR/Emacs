@@ -138,8 +138,12 @@
 
 ;; Org agenda opens in full window
 (setq org-agenda-window-setup 'only-window)
+(setq org-agenda-restore-windows-after-quit t)
+;; Force the dispatcher menu into the current window instead of splitting
+(add-to-list 'display-buffer-alist
+             '(" \\*Agenda Commands\\*" (display-buffer-same-window)))
 ;; Cleaner agenda dispatcher layout
-(setq org-agenda-menu-two-columns t)
+(setq org-agenda-menu-two-columns nil)
 (setq org-agenda-menu-show-matcher nil)
 
 ;; Modify orgmode TODO states
