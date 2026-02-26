@@ -23,7 +23,8 @@
      "c:/Users/SAttwell/Documents/org/9s1.logbook.org"
      "c:/Users/SAttwell/Documents/org/11s8.logbook.org"
      "c:/Users/SAttwell/Documents/org/7s2.logbook.org"
-     "c:/Users/SAttwell/Documents/org/7l2.logbook.org"))
+     "c:/Users/SAttwell/Documents/org/7l2.logbook.org"
+     "c:/Users/SAttwell/Documents/org/teaching.org"))
  '(org-capture-templates
    '(("c" "LOG ENTRY" entry
       (file+headline "C:/Users/SAttwell/Documents/logbook.org" "LOG")

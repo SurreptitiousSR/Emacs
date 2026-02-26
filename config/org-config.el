@@ -20,7 +20,10 @@
 	 "* TODO\s %?\s :ks3:")
 
         ("cl" "TODO" entry (file+headline "C:/Users/SAttwell/Documents/org/departmental.org" "DEPARTMENTAL TASKS")
-	 "* TODO\s %?\s :departmental:"))))
+	 "* TODO\s %?\s :departmental:")
+
+	("ct" "TODO" entry (file+headline "C:/Users/SAttwell/Documents/org/teaching.org" "TEACHING")
+	 "* TODO\s %?\s :teaching:"))))
 
 ;; Org capture prefix setup
 (define-prefix-command 'my-org-capture-map)
@@ -72,6 +75,10 @@
 (define-key my-org-capture-k-map (kbd "s") 'my-org-capture-ks-map)
 (define-key my-org-capture-ks-map (kbd "3")
     (lambda () (interactive) (org-capture nil "ck")))
+
+;;teaching
+(define-key my-org-capture-map (kbd "t")
+    (lambda () (interactive) (org-capture nil "ct")))
 
 ;;departmental
 (define-prefix-command 'my-org-capture-d-map)
