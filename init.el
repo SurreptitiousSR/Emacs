@@ -124,6 +124,11 @@
 (setq dired-omit-files "~$")
 (add-hook 'dired-mode-hook 'dired-omit-mode)
 
+;; Use built-in ls-lisp for consistent column alignment on Windows
+(require 'ls-lisp)
+(setq ls-lisp-use-insert-directory-program nil)
+(setq ls-lisp-verbosity '(links uid))
+
 ;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
