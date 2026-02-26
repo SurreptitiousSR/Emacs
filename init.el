@@ -19,7 +19,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("c:/Users/SAttwell/Documents/org/9s1.logbook.org"
+   '("c:/Users/SAttwell/Documents/org/10s6.logbook.org"
+     "c:/Users/SAttwell/Documents/org/9s1.logbook.org"
      "c:/Users/SAttwell/Documents/org/11s8.logbook.org"
      "c:/Users/SAttwell/Documents/org/7s2.logbook.org"
      "c:/Users/SAttwell/Documents/org/7l2.logbook.org"))
@@ -128,6 +129,9 @@
 (require 'ls-lisp)
 (setq ls-lisp-use-insert-directory-program nil)
 (setq ls-lisp-verbosity nil)
+
+;; Hide file details by default, toggle with (
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
 ;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
