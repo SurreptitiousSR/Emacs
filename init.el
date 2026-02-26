@@ -127,7 +127,7 @@
 ;; Use built-in ls-lisp for consistent column alignment on Windows
 (require 'ls-lisp)
 (setq ls-lisp-use-insert-directory-program nil)
-(setq ls-lisp-verbosity '(links uid))
+(setq ls-lisp-verbosity nil)
 
 ;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
