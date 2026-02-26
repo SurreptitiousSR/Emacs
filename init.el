@@ -19,18 +19,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("c:/Users/SAttwell/Documents/org/7l2.logbook.org"
-     "c:/Users/SAttwell/Documents/org/7s2.logbook.org"
-     "c:/Users/SAttwell/Documents/org/9s1.logbook.org"
-     "c:/Users/SAttwell/Documents/org/10s6.logbook.org"
+   '("c:/Users/SAttwell/Documents/org/9s1.logbook.org"
      "c:/Users/SAttwell/Documents/org/11s8.logbook.org"
-     "c:/Users/SAttwell/Documents/org/departmental.org"
-     "c:/Users/SAttwell/Documents/org/ks3.org"))
+     "c:/Users/SAttwell/Documents/org/7s2.logbook.org"
+     "c:/Users/SAttwell/Documents/org/7l2.logbook.org"))
  '(org-capture-templates
    '(("c" "LOG ENTRY" entry
-      (file+headline "C:/Users/SAttwell/Documents/logbook.org"
-		     "LOG")
-      "* LOG ENTRY %? %t\12 %i\12 %a")) t)
+      (file+headline "C:/Users/SAttwell/Documents/logbook.org" "LOG")
+      "* LOG ENTRY %? %t\12 %i\12 %a")))
  '(package-selected-packages
    '(all-the-icons-dired all-the-icons-ivy all-the-icons-ivy-rich
 			 all-the-icons-nerd-fonts counsel evil
@@ -122,6 +118,11 @@
 
 ;; Enable recentf mode that maintains a list of recently opened files
 (recentf-mode 1)
+
+;; Hide temporary files (ending in ~) in dired
+(require 'dired-x)
+(setq dired-omit-files "~$")
+(add-hook 'dired-mode-hook 'dired-omit-mode)
 
 ;; Start EMACS in fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
