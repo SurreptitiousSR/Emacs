@@ -151,5 +151,10 @@
 
 ;; Keybinds
 (global-set-key (kbd "C-S-x") 'recentf-open-files)
-(global-set-key (kbd "C-c a") 'org-agenda) 
+(defun my-org-agenda-fullscreen ()
+  "Open org-agenda dispatcher in the full window."
+  (interactive)
+  (delete-other-windows)
+  (org-agenda))
+(global-set-key (kbd "C-c a") 'my-org-agenda-fullscreen) 
 
