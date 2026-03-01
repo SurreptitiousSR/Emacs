@@ -31,8 +31,8 @@
 ;;------------------------------------------------------
 ;; FONT & THEME  (background already set in early-init.el)
 (set-face-attribute 'default nil
-                    :family "MartianMono Nerd Font Mono"
-                    :height 140)
+                    :family "Px437 IBM VGA 8x16"
+                    :height 160)
 
 ;;------------------------------------------------------
 ;; UI TWEAKS  (menu/tool/scroll-bar already disabled in early-init.el)
