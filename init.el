@@ -150,6 +150,10 @@
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 
+;; Pixel-perfect table alignment (works around Nerd Font width issues on Windows)
+(use-package valign
+  :hook (org-mode . valign-mode))
+
 ;;------------------------------------------------------
 ;; ORG-ROAM
 (use-package org-roam
