@@ -53,8 +53,8 @@
 
 ;;------------------------------------------------------
 ;; DIRECTORIES
-(setq default-directory       "~/Nextcloud/Documents/"
-      dired-default-directory "~/Nextcloud/Documents/")
+(setq default-directory       "C:/Users/samat/Nextcloud/Documents/"
+      dired-default-directory "C:/Users/samat/Nextcloud/Documents/")
 (when (eq system-type 'windows-nt)
   (setq temporary-file-directory "C:/Users/samat/AppData/Local/Temp/"))
 
@@ -149,7 +149,7 @@
 ;; ORG-ROAM
 (use-package org-roam
   :custom
-  (org-roam-directory "~/Nextcloud/Documents/roam")
+  (org-roam-directory "C:/Users/samat/Nextcloud/Documents/roam")
   :bind
   (("C-c n l" . org-roam-buffer-toggle)
    ("C-c n f" . org-roam-node-find)

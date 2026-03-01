@@ -12,5 +12,5 @@
 
 ;;Org Roam setup
 (setq find-file-visit-truename t)
-(setq org-roam-directory (file-truename "~/Nextcloud/Documents/roam"))
+(setq org-roam-directory (file-truename "C:/Users/samat/Nextcloud/Documents/roam"))
 (org-roam-db-autosync-mode)
