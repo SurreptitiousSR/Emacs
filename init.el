@@ -1,165 +1,257 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(elpy vterm vertico org-roam org-bullets orderless magit evil counsel all-the-icons-ivy-rich all-the-icons-dired)))
+;;; init.el --- Main configuration -*- lexical-binding: t -*-
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "#0D1117" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 130 :width normal :foundry "UKWN" :family "MartianMono Nerd Font Mono")))))
+;;------------------------------------------------------
+;; CUSTOM FILE - keep Custom out of this file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file 'noerror 'nomessage))
 
-;;******************************************************
-;; SET UP PACKAGE.EL TO WORK WITH MELPA
+;;------------------------------------------------------
+;; PACKAGE SYSTEM
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
+(setq package-archives
+      '(("melpa"  . "https://melpa.org/packages/")
+        ("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/packages/")))
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
 
-;;******************************************************
-;; SETUP USE-PACKAGE
+;; Bootstrap use-package (built-in from Emacs 29; install on older versions)
 (unless (package-installed-p 'use-package)
+  (unless package-archive-contents
+    (package-refresh-contents))
   (package-install 'use-package))
 
 (eval-when-compile
   (require 'use-package))
 
-;;******************************************************
-;; Packages
-(use-package evil
-  :ensure t
-  :config
-  (evil-mode 1))
+;; Default: always fetch missing packages, and defer loading unless told otherwise
+(setq use-package-always-ensure t
+      use-package-always-defer  t)
 
-(use-package vterm
-  :ensure t
-  :hook (vterm-mode . (lambda()
-		    (evil-local-mode -1))))
+;;------------------------------------------------------
+;; FONT & THEME  (background already set in early-init.el)
+(set-face-attribute 'default nil
+                    :family "MartianMono Nerd Font Mono"
+                    :height 140)
 
+;;------------------------------------------------------
+;; UI TWEAKS  (menu/tool/scroll-bar already disabled in early-init.el)
+(setq visible-bell 1)
+
+;; Window is maximized via early-init.el default-frame-alist.
+;; Ensure any NEW frames also open maximized.
+(add-hook 'after-make-frame-functions
+          (lambda (frame)
+            (set-frame-parameter frame 'fullscreen 'maximized)))
+
+;;------------------------------------------------------
+;; EDITING DEFAULTS
+(setq-default indent-tabs-mode nil
+              tab-width 4)
+(setq auto-save-default nil
+      make-backup-files nil)
+
+;;------------------------------------------------------
+;; DIRECTORIES
+(setq default-directory       "~/Nextcloud/Documents/"
+      dired-default-directory "~/Nextcloud/Documents/")
+(when (eq system-type 'windows-nt)
+  (setq temporary-file-directory "C:/Users/samat/AppData/Local/Temp/"))
+
+;;------------------------------------------------------
+;; STARTUP BUFFER - open reference file instead of scratch
+(defvar my/reference-file
+  (expand-file-name "config/reference.org" user-emacs-directory)
+  "Path to the Emacs reference / cheat-sheet file.")
+
+(setq initial-buffer-choice
+      (lambda ()
+        (if (file-exists-p my/reference-file)
+            (find-file-noselect my/reference-file)
+          (get-buffer-create "*scratch*"))))
+
+;;------------------------------------------------------
+;; RECENT FILES
 (use-package recentf
   :ensure nil
+  :demand t
   :config
   (recentf-mode 1)
   (setq recentf-max-saved-items 100
-	recentf-save-file (expand-file-name "recentf" user-emacs-directory)))
+        recentf-save-file (expand-file-name "recentf" user-emacs-directory)))
 
-(use-package ivy
-  :ensure t
+;;------------------------------------------------------
+;; EVIL (Vi keybindings)
+(use-package evil
+  :demand t
   :config
-  (ivy-mode)
-  (setopt ivy-use-virtual-buffers t)
-  (setopt enable-recursive-minibuffers t))
+  (evil-mode 1))
+
+;;------------------------------------------------------
+;; VTERM (terminal emulator)
+(use-package vterm
+  :hook (vterm-mode . (lambda () (evil-local-mode -1))))
+
+;;------------------------------------------------------
+;; COMPLETION - Ivy / Counsel / Swiper
+(use-package ivy
+  :demand t
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t
+        enable-recursive-minibuffers t))
 
 (use-package counsel
-  :ensure t
   :after ivy
-  :bind* ; load when pressed
+  :demand t
+  :bind*
   (("M-x"     . counsel-M-x)
    ("C-s"     . swiper)
    ("C-x C-f" . counsel-find-file)
-   ("C-x C-r" . counsel-recentf)  ; search for recently edited
-   ("C-c g"   . counsel-git)      ; search for files in git repo
-   ("C-c j"   . counsel-git-grep) ; search for regexp in git repo
-   ("C-c /"   . counsel-ag)       ; Use ag for regexp
+   ("C-x C-r" . counsel-recentf)
+   ("C-c g"   . counsel-git)
+   ("C-c j"   . counsel-git-grep)
+   ("C-c /"   . counsel-ag)
    ("C-x l"   . counsel-locate)
-   ("C-x C-f" . counsel-find-file)
    ("<f1> f"  . counsel-describe-function)
    ("<f1> v"  . counsel-describe-variable)
    ("<f1> l"  . counsel-find-library)
    ("<f2> i"  . counsel-info-lookup-symbol)
    ("<f2> u"  . counsel-unicode-char)
-   ("C-c C-r" . ivy-resume)))     ; Resume last Ivy-based completion
+   ("C-c C-r" . ivy-resume)))
 
 (use-package ivy-rich
-  :ensure t
+  :after ivy
+  :demand t
   :config
   (ivy-rich-mode 1))
 
+;;------------------------------------------------------
+;; ICONS (only in GUI Emacs)
 (use-package all-the-icons
-  :ensure t
   :if (display-graphic-p))
 
 (use-package all-the-icons-dired
-  :ensure t
+  :after all-the-icons
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package all-the-icons-ivy-rich
-  :ensure t
+  :after (all-the-icons ivy-rich)
   :config
   (all-the-icons-ivy-rich-mode 1))
 
+;;------------------------------------------------------
+;; ORG MODE
 (use-package org-bullets
-  :ensure t
   :hook (org-mode . org-bullets-mode))
 
+;;------------------------------------------------------
+;; ORG-ROAM
 (use-package org-roam
-  :ensure t
-  :init
-  (setq org-roam-vb2-ack t)
   :custom
   (org-roam-directory "~/Nextcloud/Documents/roam")
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert))
+  :bind
+  (("C-c n l" . org-roam-buffer-toggle)
+   ("C-c n f" . org-roam-node-find)
+   ("C-c n i" . org-roam-node-insert))
   :config
-  (org-roam-setup))  
+  (setq find-file-visit-truename t)
+  (org-roam-db-autosync-mode))
 
+;;------------------------------------------------------
+;; VERTICO + ORDERLESS
 (use-package vertico
-  :ensure t
   :config
   (vertico-mode 1))
 
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-(use-package magit
-  :ensure t)
+;;------------------------------------------------------
+;; MAGIT
+(use-package magit)
 
+;;------------------------------------------------------
+;; ELPY (Python)
 (use-package elpy
-  :ensure t
-  :init 
-  (elpy-enable))
+  :hook (python-mode . elpy-enable))
 
+;;------------------------------------------------------
+;; DIRED
 (use-package dired
   :ensure nil
   :commands (dired dired-jump)
-  :bind (("C-x C-j" . dired-jump))
-  :config
-  (when (string= system-type "darwin")
-    (let ((gls (executable-find "gls")))
-      (when gls
-        (setq dired-use-ls-dired t
-              insert-directory-program gls
-              dired-listing-switches "-aBhl --group-directories-first")))))   
+  :bind ("C-x C-j" . dired-jump))
 
-;;******************************************************
-;; UI TWEAKS
-(setq visible-bell 1)
+;;------------------------------------------------------
+;; POSTSCRIPT / PDF PRINTING (Windows only)
+(when (eq system-type 'windows-nt)
+  (setq ps-paper-type    'a4
+        ps-landscape-mode nil
+        ps-number-of-columns 1
+        ps-left-margin   36
+        ps-right-margin  36
+        ps-top-margin    36
+        ps-bottom-margin 36
+        ps-font-size     9
+        ps-header-font-size 10
+        ps-line-number   nil
+        ps-print-color-p 'black-white
+        ps-multibyte-buffer 'non-latin-printer)
 
-(menu-bar-mode -1)
+  (defun my/find-ghostscript ()
+    "Return path to the Ghostscript console executable, or nil."
+    (or (executable-find "gswin64c.exe")
+        (executable-find "gswin32c.exe")
+        (car (file-expand-wildcards
+              "C:/Program Files/gs/gs*/bin/gswin64c.exe"))))
 
-(tool-bar-mode -1)
+  (defun my/print-to-pdf (ps-print-fn)
+    "Call PS-PRINT-FN to write a .ps temp file then convert to PDF."
+    (let* ((ps-file  (make-temp-file "emacs-print-" nil ".ps"))
+           (pdf-file (concat (file-name-sans-extension ps-file) ".pdf"))
+           (gs-exe   (my/find-ghostscript)))
+      (funcall ps-print-fn ps-file)
+      (if gs-exe
+          (progn
+            (call-process gs-exe nil nil nil
+                          "-dNOPAUSE" "-dBATCH" "-sDEVICE=pdfwrite"
+                          "-dPDFSETTINGS=/printer"
+                          (concat "-sOutputFile=" pdf-file)
+                          ps-file)
+            (delete-file ps-file)
+            (message "Opening PDF: %s" pdf-file)
+            (w32-shell-execute "open" pdf-file))
+        (error "Ghostscript not found — install from https://ghostscript.com"))))
 
-(scroll-bar-mode -1)
+  (defun my/ps-print-region-pdf (start end)
+    "Print the active region as a PDF file."
+    (interactive "r")
+    (my/print-to-pdf
+     (lambda (f) (ps-print-region-with-faces start end f))))
 
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+  (defun my/ps-print-buffer-pdf ()
+    "Print the current buffer as a PDF file."
+    (interactive)
+    (my/print-to-pdf #'ps-print-buffer-with-faces))
 
-;;******************************************************
-;; LOAD ADDITIONAL FILES / SET DIRECTORIES
-(add-to-list 'load-path "~/.emacs.d/config")
-(load "key-bindings")
-(load "org-config")
+  (defalias 'ps-print-region 'my/ps-print-region-pdf)
+  (defalias 'ps-print-buffer 'my/ps-print-buffer-pdf))
 
+;;------------------------------------------------------
+;; LOAD ADDITIONAL CONFIG FILES
+(add-to-list 'load-path (expand-file-name "config" user-emacs-directory))
+(load "key-bindings" 'noerror 'nomessage)
+(load "org-config"   'noerror 'nomessage)
 
-(setq default-directory "~/Nextcloud/Documents/")
-(setq dired-default-directory "~/Nextcloud/Documents/")
-(setq initial-buffer-choice default-directory)
+;;------------------------------------------------------
+;; STARTUP BENCHMARK (visible in *Messages*)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs loaded in %.2f seconds with %d GCs."
+                     (float-time (time-subtract after-init-time before-init-time))
+                     gcs-done)))
+
+;;; init.el ends here
