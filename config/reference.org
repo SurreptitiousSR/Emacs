@@ -87,23 +87,23 @@ Press =Tab= on any heading to expand / collapse it.
 | :q   | Quit                          |
 
 * Important Directories
-| Purpose          | Path                                              |
-|------------------+---------------------------------------------------|
-| Emacs config     | C:/Users/samat/AppData/Roaming/.emacs.d/          |
-| Config sub-files | C:/Users/samat/AppData/Roaming/.emacs.d/config/   |
-| Org-Roam notes   | C:/Users/samat/Nextcloud/Documents/roam/          |
-| Default dir      | C:/Users/samat/Nextcloud/Documents/               |
+| Purpose          | Path                                                    |
+|------------------+---------------------------------------------------------|
+| Emacs config     | C:/Users/samat/AppData/Roaming/.emacs.d/                |
+| Config sub-files | C:/Users/samat/AppData/Roaming/.emacs.d/config/         |
+| Org-Roam notes   | C:/Users/samat/Nextcloud/Documents/roam/                |
+| Default dir      | C:/Users/samat/Nextcloud/Documents/                     |
 | Git config repo  | https://github.com/SurreptitiousSR/Emacs (home branch) |
 
 * Configuration Files
-| File             | Purpose                                |
-|------------------+----------------------------------------|
-| early-init.el    | Pre-GUI startup optimizations          |
-| init.el          | Main configuration                     |
-| custom.el        | Emacs Custom settings (auto-managed)   |
-| config/key-bindings.el | Extra keybindings                |
-| config/org-config.el   | Org mode & Org-Roam setup        |
-| config/reference.org   | This file (startup reference)    |
+| File                   | Purpose                              |
+|------------------------+--------------------------------------|
+| early-init.el          | Pre-GUI startup optimizations        |
+| init.el                | Main configuration                   |
+| custom.el              | Emacs Custom settings (auto-managed) |
+| config/key-bindings.el | Extra keybindings                    |
+| config/org-config.el   | Org mode & Org-Roam setup            |
+| config/reference.org   | This file (startup reference)        |
 
 * Installed Packages
 | Package              | Purpose                             |
