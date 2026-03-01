@@ -84,6 +84,11 @@
 ;; EVIL (Vi keybindings)
 (use-package evil
   :demand t
+  :init
+  ;; Must be set before Evil loads — prevents Evil from binding C-i
+  ;; (which shares the same keycode as TAB), so Org tables can use TAB
+  ;; for field navigation and alignment.
+  (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1))
 
