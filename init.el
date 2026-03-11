@@ -38,7 +38,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "gray23" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 102 :width normal :foundry "outline" :family "MartianMono NFM")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "gray23" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 160 :width normal :foundry "outline" :family "Bm437 IBM VGA 9x16-2x")))))
 
 
 ;; (EVIL MODE START
@@ -144,6 +144,15 @@
              '(" \\*Agenda Commands\\*" (display-buffer-same-window)))
 ;; Hide matcher regex from agenda dispatcher
 (setq org-agenda-menu-show-matcher nil)
+;; Start agenda from today, not Monday
+(setq org-agenda-start-on-weekday nil)
+;; Use leading zeros for time alignment (08:00 not 8:00)
+(setq org-agenda-time-leading-zero t)
+;; Custom agenda: 3-day view + upcoming items
+(setq org-agenda-custom-commands
+      '(("n" "Agenda and all TODOs"
+         ((agenda "" ((org-agenda-span 3)))
+          (alltodo "" ((org-agenda-overriding-header "Upcoming")))))))
 
 ;; Modify orgmode TODO states
 (setq org-todo-keywords
@@ -158,9 +167,9 @@
 ;; Keybinds
 (global-set-key (kbd "C-S-x") 'recentf-open-files)
 (defun my-org-agenda-fullscreen ()
-  "Open org-agenda dispatcher in the full window."
+  "Open custom agenda view in the full window."
   (interactive)
   (delete-other-windows)
-  (org-agenda))
+  (org-agenda nil "n"))
 (global-set-key (kbd "C-c a") 'my-org-agenda-fullscreen) 
 
