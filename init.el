@@ -47,11 +47,17 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
-(package-refresh-contents)
+
+;; Only refresh package contents when a package needs installing
+(defun my-package-install (pkg)
+  "Install PKG, refreshing contents first if needed."
+  (unless (package-installed-p pkg)
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install pkg)))
 
 ;; Download Evil
-(unless (package-installed-p 'evil)
-  (package-install 'evil))
+(my-package-install 'evil)
 
 ;; Enable Evil
 (require 'evil)
@@ -61,8 +67,7 @@
 
 ;; (UI / MINIBUFFER IMPROVEMENTS START
 ;; Download ivy (consel pulls in ivy and swiper as well)
-(unless (package-installed-p 'counsel)
-  (package-install 'counsel))
+(my-package-install 'counsel)
 
 ;; Enable ivy
 (require 'ivy)
@@ -74,19 +79,15 @@
 (counsel-mode)
 
 ;; Download ivy-rich (better minibuffer formatting)
-(unless (package-installed-p 'ivy-rich)
-  (package-install 'ivy-rich))
+(my-package-install 'ivy-rich)
 
 ;; Enable ivy-rich
 (require 'ivy-rich)
 (ivy-rich-mode 1)
 
 ;; Download all-the-icons
-(unless (package-installed-p 'all-the-icons)
-  (package-install 'all-the-icons))
-
-(unless (package-installed-p 'all-the-icons-dired)
-  (package-install 'all-the-icons-dired))
+(my-package-install 'all-the-icons)
+(my-package-install 'all-the-icons-dired)
 
 ;; Run all-the-icons
 (when (display-graphic-p)
@@ -98,8 +99,7 @@
 (all-the-icons-ivy-rich-mode 1)
 
 ;; Download orgmode bullets - nicer than asterisks
-(unless (package-installed-p 'org-bullets)
-  (package-install 'org-bullets))
+(my-package-install 'org-bullets)
 
 ;; Enable orgmode bullets
 
@@ -151,6 +151,9 @@
 
 ;; Make org indent things properly
 (add-hook 'org-mode-hook (lambda () (org-indent-mode)))
+
+;; Enable visual line wrapping (word wrap)
+(global-visual-line-mode 1)
 
 ;; Keybinds
 (global-set-key (kbd "C-S-x") 'recentf-open-files)
