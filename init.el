@@ -122,7 +122,7 @@
 
 ;; Hide temporary files (ending in ~) in dired
 (require 'dired-x)
-(setq dired-omit-files "~$")
+(setq dired-omit-files "\\`[.]\\|~$\\|\\`#.*#\\'")
 (add-hook 'dired-mode-hook 'dired-omit-mode)
 
 ;; Use built-in ls-lisp for consistent column alignment on Windows
