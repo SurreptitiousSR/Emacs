@@ -89,4 +89,4 @@
     (lambda () (interactive) (org-capture nil "cl")))
 
 ;; TAGS for tagging
-(setq org-tag-alist '(("form" . ?f) ("classroom" . ?c) ("ks3" . ?k) ("departmental" . ?d) ("lablogger" . ?l)))
+(setq org-tag-alist '(("departmental" . ?d) ("teaching" . ?t) ("marking" . ?m)))

@@ -38,7 +38,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :extend nil :stipple nil :background "gray23" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 160 :width normal :foundry "outline" :family "Bm437 IBM VGA 9x16-2x")))))
+ '(default ((t (:inherit nil :extend nil :stipple nil :background "gray23" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 130 :width normal :foundry "outline" :family "Px437 IBM VGA 9x16")))))
 
 
 ;; (EVIL MODE START
@@ -148,6 +148,12 @@
 (setq org-agenda-start-on-weekday nil)
 ;; Use leading zeros for time alignment (08:00 not 8:00)
 (setq org-agenda-time-leading-zero t)
+;; Prefix format: category left-padded, then time aligned
+(setq org-agenda-prefix-format
+      '((agenda . " %-16:c%?-12t% s")
+        (todo . " %-16:c")
+        (tags . " %-16:c")
+        (search . " %-16:c")))
 ;; Custom agenda: 3-day view + upcoming items
 (setq org-agenda-custom-commands
       '(("n" "Agenda and all TODOs"
