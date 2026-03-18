@@ -6,21 +6,26 @@
 (defvar my/org-directory
   (pcase system-type
     ('windows-nt "C:/Users/SAttwell/Documents/org/")
-    ('darwin "~/org/"))
+    ('darwin "~/org-files/"))
   "Root directory for org files, OS-dependent.")
 
 (defvar my/default-directory
   (pcase system-type
     ('windows-nt "C:/Users/SAttwell/Documents/org/")
-    ('darwin "~/org/"))
+    ('darwin "~/org-files/"))
   "Default directory for file operations, OS-dependent.")
 
 ;; ============================================================
 ;; LOAD CONFIG MODULES
 ;; ============================================================
 (add-to-list 'load-path "~/.emacs.d/config")
+
+;; Pre-declare org-agenda-custom-commands so config modules can append to it
+(defvar org-agenda-custom-commands nil)
+
 (load "org-config")
 (load "org-sync")
+(load "timetable-config")
 
 ;; Org directory
 (with-eval-after-load 'org
