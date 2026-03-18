@@ -1,31 +1,48 @@
-;;(ORG CAPTURE TEMPLATES START
+;;; org-config.el --- Org capture templates and tags -*- lexical-binding: t -*-
+
+;; Helper to build org file paths from my/org-directory
+(defun my/org-file (filename)
+  "Return full path to FILENAME within `my/org-directory'."
+  (expand-file-name filename my/org-directory))
+
+;; ============================================================
+;; ORG AGENDA FILES
+;; ============================================================
+(with-eval-after-load 'org
+  (setq org-agenda-files (list my/org-directory)))
+
+;; ============================================================
+;; ORG CAPTURE TEMPLATES
+;; ============================================================
 (with-eval-after-load 'org
   (setq org-capture-templates
-      '(("ca" "LOG ENTRY" entry (file+headline "C:/Users/SAttwell/Documents/org/7l2.logbook.org" "LOG")
-	 "* LOG ENTRY %T\n %?")
+	`(("ca" "LOG ENTRY" entry (file+headline ,(my/org-file "7l2.logbook.org") "LOG")
+	   "* LOG ENTRY %T\n %?")
 
-	("cb" "LOG ENTRY" entry (file+headline "C:/Users/SAttwell/Documents/org/7s2.logbook.org" "LOG")
-	 "* LOG ENTRY %T\n %?")
+	  ("cb" "LOG ENTRY" entry (file+headline ,(my/org-file "7s2.logbook.org") "LOG")
+	   "* LOG ENTRY %T\n %?")
 
-        ("cc" "LOG ENTRY" entry (file+headline "C:/Users/SAttwell/Documents/org/9s1.logbook.org" "LOG")
-	 "* LOG ENTRY %T\n %?")
+	  ("cc" "LOG ENTRY" entry (file+headline ,(my/org-file "9s1.logbook.org") "LOG")
+	   "* LOG ENTRY %T\n %?")
 
-	("cd" "LOG ENTRY" entry (file+headline "C:/Users/SAttwell/Documents/org/10s6.logbook.org" "LOG")
-	 "* LOG ENTRY %T\n %?")
+	  ("cd" "LOG ENTRY" entry (file+headline ,(my/org-file "10s6.logbook.org") "LOG")
+	   "* LOG ENTRY %T\n %?")
 
-	("ce" "LOG ENTRY" entry (file+headline "C:/Users/SAttwell/Documents/org/11s8.logbook.org" "LOG")
-	 "* LOG ENTRY %T\n %?")
+	  ("ce" "LOG ENTRY" entry (file+headline ,(my/org-file "11s8.logbook.org") "LOG")
+	   "* LOG ENTRY %T\n %?")
 
-	("ck" "TODO" entry (file+headline "C:/Users/SAttwell/Documents/org/ks3.org" "TODO")
-	 "* TODO\s %?\s :ks3:")
+	  ("ck" "TODO" entry (file+headline ,(my/org-file "ks3.org") "TODO")
+	   "* TODO\s %?\s :ks3:")
 
-        ("cl" "TODO" entry (file+headline "C:/Users/SAttwell/Documents/org/departmental.org" "DEPARTMENTAL TASKS")
-	 "* TODO\s %?\s :departmental:")
+	  ("cl" "TODO" entry (file+headline ,(my/org-file "departmental.org") "DEPARTMENTAL TASKS")
+	   "* TODO\s %?\s :departmental:")
 
-	("ct" "TODO" entry (file+headline "C:/Users/SAttwell/Documents/org/teaching.org" "TEACHING")
-	 "* TODO\s %?\s :teaching:"))))
+	  ("ct" "TODO" entry (file+headline ,(my/org-file "teaching.org") "TEACHING")
+	   "* TODO\s %?\s :teaching:"))))
 
-;; Org capture prefix setup
+;; ============================================================
+;; ORG CAPTURE KEYBINDINGS
+;; ============================================================
 (define-prefix-command 'my-org-capture-map)
 (global-set-key (kbd "C-c c") 'my-org-capture-map)
 (define-key my-org-capture-map (kbd "c") 'org-capture)
@@ -88,5 +105,7 @@
 (define-key my-org-capture-dp-map (kbd "t")
     (lambda () (interactive) (org-capture nil "cl")))
 
-;; TAGS for tagging
+;; ============================================================
+;; TAGS
+;; ============================================================
 (setq org-tag-alist '(("departmental" . ?d) ("teaching" . ?t) ("marking" . ?m)))

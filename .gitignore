@@ -1,0 +1,12 @@
+auto-save-list/
+bookmarks
+bookmarks~
+elpa/
+elpaca/
+elpy/
+*.el~
+org-persist/
+org-roam.db
+recentf
+snippets/
+transient/
