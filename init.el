@@ -149,6 +149,10 @@
              '(" \\*Agenda Commands\\*" (display-buffer-same-window)))
 ;; Hide matcher regex from agenda dispatcher
 (setq org-agenda-menu-show-matcher nil)
+;; Performance: skip startup options when scanning agenda files
+(setq org-agenda-inhibit-startup t)
+;; Performance: don't check blocked tasks
+(setq org-agenda-dim-blocked-tasks nil)
 ;; Sort agenda items by priority (high to low) then category
 (setq org-agenda-sorting-strategy
       '((agenda habit-down time-up priority-down category-keep)
@@ -157,14 +161,66 @@
         (search category-keep)))
 ;; Start agenda from today, not Monday
 (setq org-agenda-start-on-weekday nil)
+;; Hide empty time grid lines, keep the "now" indicator
+(setq org-agenda-use-time-grid t)
+(setq org-agenda-time-grid
+      '((daily today require-timed)
+        ()
+        "......" "────────────────"))
 ;; Use leading zeros for time alignment (08:00 not 8:00)
 (setq org-agenda-time-leading-zero t)
 ;; Prefix format: category left-padded, then time aligned
 (setq org-agenda-prefix-format
-      '((agenda . " %-16:c%?-12t% s")
-        (todo . " %-16:c")
-        (tags . " %-16:c")
-        (search . " %-16:c")))
+      '((agenda . " %?-12t% s")
+        (todo . " ")
+        (tags . " ")
+        (search . " ")))
+;; Add spacing before timetable entries to group time blocks
+(defvar my/agenda-separator " ─────────────────────────────────────\n")
+(defun my/org-agenda-add-timetable-spacing ()
+  "Insert dashed separators between time blocks in the agenda."
+  (let ((inhibit-read-only t))
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((line-text (buffer-substring (line-beginning-position) (line-end-position))))
+          ;; Rule 1: separator before timetable entries unless prev line starts with same time
+          (when (and (looking-at "^\\s-*\\([0-9][0-9]:[0-9][0-9]\\)-[0-9][0-9]:[0-9][0-9]")
+                     (not (looking-back (regexp-quote my/agenda-separator) nil))
+                     (save-excursion
+                       (forward-line -1)
+                       (not (looking-at "^$\\|^[A-Z]\\|^ ─")))
+                     (let ((start-time (match-string 1)))
+                       (save-excursion
+                         (forward-line -1)
+                         (not (looking-at (concat "^\\s-*" (regexp-quote start-time)))))))
+            (beginning-of-line)
+            (insert my/agenda-separator))
+          ;; Rule 3: blank before date headers
+          (when (and (looking-at "^[A-Z]")
+                     (not (looking-back "\n\n" nil))
+                     (save-excursion
+                       (forward-line -1)
+                       (not (looking-at "^$\\|^[A-Z]\\|^ ─"))))
+            (beginning-of-line)
+            (insert "\n"))
+          ;; Rule 2: separator before scheduled items when prev line starts with a different time
+          (when (and (looking-at "^\\s-*\\([0-9][0-9]:[0-9][0-9]\\)")
+                     (not (string-match-p "LOG ENTRY" line-text))
+                     (not (looking-at "^\\s-*[0-9][0-9]:[0-9][0-9]-"))
+                     (not (looking-back (regexp-quote my/agenda-separator) nil))
+                     (save-excursion
+                       (forward-line -1)
+                       (not (looking-at "^$\\|^[A-Z]\\|^ ─")))
+                     (let ((this-time (match-string 1)))
+                       (save-excursion
+                         (forward-line -1)
+                         (not (looking-at (concat "^\\s-*" (regexp-quote this-time)))))))
+            (beginning-of-line)
+            (insert my/agenda-separator)))
+        (forward-line 1)))))
+(add-hook 'org-agenda-finalize-hook #'my/org-agenda-add-timetable-spacing)
+
 ;; Custom agenda: 3-day view + upcoming items
 (setq org-agenda-custom-commands
       '(("n" "Agenda and all TODOs"
