@@ -142,13 +142,20 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Org agenda opens in full window
-(setq org-agenda-window-setup 'only-window)
+(setq org-agenda-window-setup 'current-window)
+;; Restore windows when quitting agenda
 (setq org-agenda-restore-windows-after-quit t)
 ;; Force the dispatcher menu into the current window instead of splitting
 (add-to-list 'display-buffer-alist
              '(" \\*Agenda Commands\\*" (display-buffer-same-window)))
 ;; Hide matcher regex from agenda dispatcher
 (setq org-agenda-menu-show-matcher nil)
+;; Capture buffer opens in current window
+(setq org-capture-use-agenda-date-prompt nil)
+(add-to-list 'display-buffer-alist
+             '("\\*Org Select\\*" (display-buffer-same-window)))
+(add-to-list 'display-buffer-alist
+             '("^CAPTURE-" (display-buffer-same-window)))
 ;; Performance: skip startup options when scanning agenda files
 (setq org-agenda-inhibit-startup t)
 ;; Performance: don't check blocked tasks
@@ -249,6 +256,18 @@
                    (org-agenda-overriding-header
                     (format "Week %s Timetable" (my/current-week)))))))))
 
+;; Highlight marking-tagged items in red in the agenda
+(defun my/org-agenda-color-marking ()
+  "Color lines with :marking: tag in red."
+  (let ((inhibit-read-only t))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward ".*:marking:.*" nil t)
+        (add-face-text-property
+         (match-beginning 0) (match-end 0)
+         '(:foreground "red"))))))
+(add-hook 'org-agenda-finalize-hook #'my/org-agenda-color-marking)
+
 ;; Modify orgmode TODO states
 (setq org-todo-keywords
       '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "DELEGATED" "MEET")))
@@ -268,4 +287,9 @@
   (interactive)
   (delete-other-windows)
   (org-agenda))
+(defun my-org-agenda-tiled ()
+  "Open org-agenda dispatcher in the current window (respects splits)."
+  (interactive)
+  (org-agenda))
 (global-set-key (kbd "C-c a") 'my-org-agenda-fullscreen)
+(global-set-key (kbd "C-c A") 'my-org-agenda-tiled)

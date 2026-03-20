@@ -38,7 +38,10 @@
 	   "* TODO\s %?\s :departmental:")
 
 	  ("ct" "TODO" entry (file+headline ,(my/org-file "teaching.org") "TEACHING")
-	   "* TODO\s %?\s :teaching:"))))
+	   "* TODO\s %?\s :teaching:")
+
+	  ("cg" "GENERAL" entry (file+headline ,(my/org-file "general.org") "GENERAL")
+	   "* TODO %? "))))
 
 ;; ============================================================
 ;; ORG CAPTURE KEYBINDINGS
@@ -104,6 +107,10 @@
 (define-key my-org-capture-d-map (kbd "p") 'my-org-capture-dp-map)
 (define-key my-org-capture-dp-map (kbd "t")
     (lambda () (interactive) (org-capture nil "cl")))
+
+;;general
+(global-set-key (kbd "C-c g")
+    (lambda () (interactive) (org-capture nil "cg")))
 
 ;; ============================================================
 ;; TAGS
