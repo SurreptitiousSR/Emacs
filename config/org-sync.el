@@ -41,7 +41,7 @@
         (list "commit" "-m" (format-time-string "auto: %Y-%m-%d %H:%M:%S"))
         (lambda (code)
           (when (= code 0)
-            (org-sync--run-git '("push") nil)
+            (org-sync--run-git '("push" "origin" "HEAD:main") nil)
             (message "org-sync: pushed."))))))))
 
 (defun org-sync-after-save ()
@@ -57,6 +57,19 @@
 
 ;; Hook into after-save
 (add-hook 'after-save-hook #'org-sync-after-save)
+
+;; Sync on Emacs close
+(add-hook 'kill-emacs-hook
+          (lambda ()
+            (let ((default-directory my/org-directory))
+              (when (file-directory-p (expand-file-name ".git" my/org-directory))
+                (call-process "git" nil nil nil "add" "-A")
+                (call-process "git" nil nil nil "commit" "-m"
+                              (format-time-string "auto: %Y-%m-%d %H:%M:%S"))
+                (call-process "git" nil nil nil "push" "origin" "HEAD:main")))))
+
+;; Periodic sync every 15 minutes
+(run-with-timer 900 900 #'org-sync--commit-and-push)
 
 ;; Pull on startup (with a short delay so Emacs finishes loading first)
 (add-hook 'emacs-startup-hook
