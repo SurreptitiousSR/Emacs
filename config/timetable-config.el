@@ -38,31 +38,7 @@
 (unless (member '(:eval my/week-indicator) mode-line-misc-info)
   (push '(:eval my/week-indicator) mode-line-misc-info))
 
-;; ============================================================
-;; TIMETABLE AGENDA VIEW
-;; ============================================================
-;; Timetable agenda commands — added to org-agenda-custom-commands after org loads
-(with-eval-after-load 'org
-  (add-to-list 'org-agenda-custom-commands
-               '("w" "This week's timetable"
-                 ((agenda ""
-                          ((org-agenda-span 5)
-                           (org-agenda-start-on-weekday 1)
-                           (org-agenda-tag-filter-preset '("-free"))
-                           (org-agenda-overriding-header
-                            (format "Week %s Timetable" (my/current-week)))))))
-               t)
-  (add-to-list 'org-agenda-custom-commands
-               '("t" "Today's timetable"
-                 ((agenda ""
-                          ((org-agenda-span 1)
-                           (org-agenda-start-on-weekday nil)
-                           (org-agenda-time-grid '((daily today)
-                                                   (800 900 1000 1100 1200 1300 1400 1500)
-                                                   "......" "----------------"))
-                           (org-agenda-tag-filter-preset '("-free"))
-                           (org-agenda-overriding-header
-                            (format "Today's Timetable — Week %s" (my/current-week)))))))
-               t))
+;; Timetable agenda views ("t" and "w") are defined in init.el
+;; alongside the other org-agenda-custom-commands.
 
 (provide 'timetable-config)

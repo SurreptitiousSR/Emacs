@@ -20,9 +20,6 @@
 ;; ============================================================
 (add-to-list 'load-path "~/.emacs.d/config")
 
-;; Pre-declare org-agenda-custom-commands so config modules can append to it
-(defvar org-agenda-custom-commands nil)
-
 (load "org-config")
 (load "org-sync")
 (load "timetable-config")
@@ -177,7 +174,24 @@
          ((tags-todo "marking"
                      ((org-agenda-overriding-header "TODO")))
           (tags "marking/DONE"
-                ((org-agenda-overriding-header "────────────────────────────────────────\nCompleted")))))))
+                ((org-agenda-overriding-header "────────────────────────────────────────\nCompleted")))))
+        ("t" "Today's timetable"
+         ((agenda ""
+                  ((org-agenda-span 1)
+                   (org-agenda-start-on-weekday nil)
+                   (org-agenda-time-grid '((daily today)
+                                           (800 900 1000 1100 1200 1300 1400 1500)
+                                           "......" "----------------"))
+                   (org-agenda-tag-filter-preset '("-free"))
+                   (org-agenda-overriding-header
+                    (format "Today's Timetable — Week %s" (my/current-week)))))))
+        ("w" "This week's timetable"
+         ((agenda ""
+                  ((org-agenda-span 5)
+                   (org-agenda-start-on-weekday 1)
+                   (org-agenda-tag-filter-preset '("-free"))
+                   (org-agenda-overriding-header
+                    (format "Week %s Timetable" (my/current-week)))))))))
 
 ;; Modify orgmode TODO states
 (setq org-todo-keywords
