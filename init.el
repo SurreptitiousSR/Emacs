@@ -53,8 +53,15 @@
 
 ;;------------------------------------------------------
 ;; DIRECTORIES
-(setq default-directory       "C:/Users/samat/Nextcloud/Documents/"
-      dired-default-directory "C:/Users/samat/Nextcloud/Documents/")
+(defvar my/documents-dir
+  (cond
+   ((eq system-type 'windows-nt) "C:/Users/samat/Nextcloud/Documents/")
+   (t (let ((nc (expand-file-name "~/Nextcloud/Documents/")))
+        (if (file-directory-p nc) nc (expand-file-name "~/")))))
+  "Base documents directory, resolved per OS.")
+
+(setq default-directory       my/documents-dir
+      dired-default-directory my/documents-dir)
 (when (eq system-type 'windows-nt)
   (setq temporary-file-directory "C:/Users/samat/AppData/Local/Temp/"))
 
@@ -158,13 +165,15 @@
 ;; ORG-ROAM
 (use-package org-roam
   :custom
-  (org-roam-directory "C:/Users/samat/Nextcloud/Documents/roam")
+  (org-roam-directory (expand-file-name "roam" my/documents-dir))
   :bind
   (("C-c n l" . org-roam-buffer-toggle)
    ("C-c n f" . org-roam-node-find)
    ("C-c n i" . org-roam-node-insert))
   :config
-  (setq find-file-visit-truename t)
+  ;; find-file-visit-truename causes symlink cycle errors on Linux
+  (when (eq system-type 'windows-nt)
+    (setq find-file-visit-truename t))
   (org-roam-db-autosync-mode))
 
 ;;------------------------------------------------------
