@@ -188,6 +188,17 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;;------------------------------------------------------
+;; PROJECTILE
+(use-package projectile
+  :demand t
+  :config
+  (projectile-mode 1))
+
+;; FIND-FILE-IN-PROJECT (used by elpy)
+(use-package find-file-in-project
+  :defer t)
+
+;;------------------------------------------------------
 ;; MAGIT
 (use-package magit)
 
