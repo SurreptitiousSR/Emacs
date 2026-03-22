@@ -94,7 +94,9 @@
 ;;------------------------------------------------------
 ;; VTERM (terminal emulator)
 (use-package vterm
-  :hook (vterm-mode . (lambda () (evil-local-mode -1))))
+  :hook (vterm-mode . (lambda ()
+                        (evil-local-mode -1)
+                        (setq-local window-size-fixed 'height))))
 
 ;;------------------------------------------------------
 ;; COMPLETION - Ivy / Counsel / Swiper
@@ -203,7 +205,9 @@
   :config
   (claude-code-ide-emacs-tools-setup)
   (add-to-list 'display-buffer-alist
-               '("\\*claude-code" (display-buffer-full-frame))))
+               '("\\*claude-code" (display-buffer-full-frame)))
+  (advice-add 'claude-code-ide--configure-vterm-buffer :after
+              (lambda () (evil-local-mode -1))))
 
 ;;------------------------------------------------------
 ;; MAGIT
