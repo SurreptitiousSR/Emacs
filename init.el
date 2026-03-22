@@ -66,16 +66,8 @@
   (setq temporary-file-directory "C:/Users/samat/AppData/Local/Temp/"))
 
 ;;------------------------------------------------------
-;; STARTUP BUFFER - open reference file instead of scratch
-(defvar my/reference-file
-  (expand-file-name "config/reference.org" user-emacs-directory)
-  "Path to the Emacs reference / cheat-sheet file.")
-
-(setq initial-buffer-choice
-      (lambda ()
-        (if (file-exists-p my/reference-file)
-            (find-file-noselect my/reference-file)
-          (get-buffer-create "*scratch*"))))
+;; STARTUP BUFFER - open home directory in dired
+(setq initial-buffer-choice (expand-file-name "~/"))
 
 ;;------------------------------------------------------
 ;; RECENT FILES
