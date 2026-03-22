@@ -204,7 +204,13 @@
 (use-package dired
   :ensure nil
   :commands (dired dired-jump)
-  :bind ("C-x C-j" . dired-jump))
+  :bind ("C-x C-j" . dired-jump)
+  :hook
+  (dired-mode . dired-hide-details-mode)
+  (dired-mode . dired-omit-mode)
+  :config
+  (require 'dired-x)
+  (setq dired-omit-files "^\\."))  ; hide dotfiles
 
 ;;------------------------------------------------------
 ;; POSTSCRIPT / PDF PRINTING (Windows only)

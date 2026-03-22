@@ -38,6 +38,8 @@ Press =Tab= on any heading to expand / collapse it.
 | Key       | Action                        |
 |-----------+-------------------------------|
 | C-x C-j   | Jump to current file in dired |
+| (         | Toggle file details           |
+| C-x M-o   | Toggle hidden (dot) files     |
 
 ** Org Mode
 | Key       | Action                        |
