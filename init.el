@@ -201,6 +201,7 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :custom
   (claude-code-ide-use-side-window nil)
+  (claude-code-ide-vterm-render-delay 0.05)
   :bind ("C-c C-'" . claude-code-ide-menu)
   :config
   (claude-code-ide-emacs-tools-setup)
