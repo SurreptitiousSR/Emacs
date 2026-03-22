@@ -192,11 +192,18 @@
 
 ;;------------------------------------------------------
 ;; CLAUDE CODE IDE
+(add-to-list 'exec-path (expand-file-name "~/.local/bin"))
+(setenv "PATH" (concat (expand-file-name "~/.local/bin") ":" (getenv "PATH")))
+
 (use-package claude-code-ide
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :custom
+  (claude-code-ide-use-side-window nil)
   :bind ("C-c C-'" . claude-code-ide-menu)
   :config
-  (claude-code-ide-emacs-tools-setup))
+  (claude-code-ide-emacs-tools-setup)
+  (add-to-list 'display-buffer-alist
+               '("\\*claude-code" (display-buffer-full-frame))))
 
 ;;------------------------------------------------------
 ;; MAGIT
