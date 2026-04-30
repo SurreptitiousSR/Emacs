@@ -168,6 +168,7 @@
         (search category-keep)))
 ;; Start agenda from today, not Monday
 (setq org-agenda-start-on-weekday nil)
+(setq org-agenda-format-date "%A %d %B %Y")
 ;; Hide empty time grid lines, keep the "now" indicator
 (setq org-agenda-use-time-grid t)
 (setq org-agenda-time-grid
@@ -224,6 +225,14 @@
                          (forward-line -1)
                          (not (looking-at (concat "^\\s-*" (regexp-quote this-time)))))))
             (beginning-of-line)
+            (insert my/agenda-separator))
+          ;; Rule 4: separator before deadline/overdue items (e.g. "40 d. ago:", "In 9 d.:", "Sched.")
+          (when (and (looking-at "^\\s-*\\(In \\|[0-9]+ d\\. ago:\\|Sched\\.\\)")
+                     (not (looking-back (regexp-quote my/agenda-separator) nil))
+                     (save-excursion
+                       (forward-line -1)
+                       (not (looking-at "^$\\|^[A-Z]\\|^ ─\\|^\\s-*\\(In \\|[0-9]+ d\\. ago:\\|Sched\\.\\)"))))
+            (beginning-of-line)
             (insert my/agenda-separator)))
         (forward-line 1)))))
 (add-hook 'org-agenda-finalize-hook #'my/org-agenda-add-timetable-spacing)
@@ -235,10 +244,12 @@
           (alltodo "" ((org-agenda-overriding-header "Upcoming")))))
         ("m" "Marking"
          ((tags-todo "marking"
-                     ((org-agenda-overriding-header "TODO")))
+                     ((org-agenda-overriding-header "TODO")
+                      (org-agenda-prefix-format " %-16c ")))
           (tags "marking/DONE"
-                ((org-agenda-overriding-header "────────────────────────────────────────\nCompleted")))))
-        ("t" "Today's timetable"
+                ((org-agenda-overriding-header "────────────────────────────────────────\nCompleted")
+                 (org-agenda-prefix-format " %-16c ")))))
+        ("d" "Today's timetable"
          ((agenda ""
                   ((org-agenda-span 1)
                    (org-agenda-start-on-weekday nil)
@@ -252,21 +263,35 @@
          ((agenda ""
                   ((org-agenda-span 5)
                    (org-agenda-start-on-weekday 1)
+                   (org-agenda-files (list (expand-file-name "timetable.org" my/org-directory)
+                                           (expand-file-name "school-calendar.org" my/org-directory)))
                    (org-agenda-tag-filter-preset '("-free"))
                    (org-agenda-overriding-header
-                    (format "Week %s Timetable" (my/current-week)))))))))
+                    (format "Week %s Timetable" (my/current-week)))))))
+        ("p" "Topic Progress"
+         ((tags-todo "topics"
+                     ((org-agenda-overriding-header "Topics — TODO")
+                      (org-agenda-prefix-format " %-16c ")))
+          (tags "topics/DONE"
+                ((org-agenda-overriding-header "────────────────────────────────────────\nTopics — Completed")
+                 (org-agenda-prefix-format " %-16c ")))))
+        ("t" "TODOs by Tag"
+         ((tags-todo "marking"
+                     ((org-agenda-overriding-header "Marking")
+                      (org-agenda-prefix-format " %-16c ")))
+          (tags-todo "teaching"
+                     ((org-agenda-overriding-header "────────────────────────────────────────\nTeaching")
+                      (org-agenda-prefix-format " %-16c ")))
+          (tags-todo "departmental"
+                     ((org-agenda-overriding-header "────────────────────────────────────────\nDepartmental")
+                      (org-agenda-prefix-format " %-16c ")))
+          (tags-todo "reprographics"
+                     ((org-agenda-overriding-header "────────────────────────────────────────\nReprographics")
+                      (org-agenda-prefix-format " %-16c ")))
+          (tags-todo "-marking-teaching-departmental-reprographics-topics"
+                     ((org-agenda-overriding-header "────────────────────────────────────────\nGeneral")
+                      (org-agenda-prefix-format " %-16c ")))))))
 
-;; Highlight marking-tagged items in red in the agenda
-(defun my/org-agenda-color-marking ()
-  "Color lines with :marking: tag in red."
-  (let ((inhibit-read-only t))
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward ".*:marking:.*" nil t)
-        (add-face-text-property
-         (match-beginning 0) (match-end 0)
-         '(:foreground "red"))))))
-(add-hook 'org-agenda-finalize-hook #'my/org-agenda-color-marking)
 
 ;; Modify orgmode TODO states
 (setq org-todo-keywords
@@ -279,8 +304,46 @@
 (global-visual-line-mode 1)
 
 ;; ============================================================
+;; AGENDA: RET opens logbook for lessons
+;; ============================================================
+(defvar my/class-logbook-map
+  '(("11LS/" . "11s8.logbook.org")
+    ("10LS/" . "10s6.logbook.org")
+    ("7L/"   . "7l2.logbook.org")
+    ("7S/"   . "7s2.logbook.org")
+    ("9S/"   . "9s1.logbook.org"))
+  "Maps class code patterns to logbook filenames for agenda RET.")
+
+(defun my/agenda-goto-or-logbook ()
+  "On a timetable lesson, open its logbook. Otherwise, default agenda-goto."
+  (interactive)
+  (let* ((line (buffer-substring-no-properties (line-beginning-position) (line-end-position)))
+         (logbook
+          (catch 'found
+            (dolist (pair my/class-logbook-map)
+              (when (string-match-p (regexp-quote (car pair)) line)
+                (throw 'found (cdr pair)))))))
+    (if logbook
+        (let ((path (expand-file-name logbook my/org-directory)))
+          (find-file path)
+          (goto-char (point-min))
+          (when (re-search-forward "^\\* LOG" nil t)
+            (beginning-of-line)
+            (org-show-subtree)
+            (recenter 0)))
+      (org-agenda-goto))))
+
+(with-eval-after-load 'org-agenda
+  (define-key org-agenda-mode-map (kbd "RET") #'my/agenda-goto-or-logbook))
+
+;; ============================================================
 ;; KEYBINDINGS
 ;; ============================================================
+(global-unset-key (kbd "<f3>"))
+(global-unset-key (kbd "<f4>"))
+(global-unset-key (kbd "C-x ("))
+(global-unset-key (kbd "C-x )"))
+(global-unset-key (kbd "C-x e"))
 (global-set-key (kbd "C-S-x") 'recentf-open-files)
 (defun my-org-agenda-fullscreen ()
   "Open org-agenda dispatcher in the full window."

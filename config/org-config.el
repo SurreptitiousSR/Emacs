@@ -17,19 +17,19 @@
 (with-eval-after-load 'org
   (setq org-capture-templates
 	`(("ca" "LOG ENTRY" entry (file+headline ,(my/org-file "7l2.logbook.org") "LOG")
-	   "* LOG ENTRY %T\n %?")
+	   "* LOG ENTRY %T\n %?" :unnarrowed t)
 
 	  ("cb" "LOG ENTRY" entry (file+headline ,(my/org-file "7s2.logbook.org") "LOG")
-	   "* LOG ENTRY %T\n %?")
+	   "* LOG ENTRY %T\n %?" :unnarrowed t)
 
 	  ("cc" "LOG ENTRY" entry (file+headline ,(my/org-file "9s1.logbook.org") "LOG")
-	   "* LOG ENTRY %T\n %?")
+	   "* LOG ENTRY %T\n %?" :unnarrowed t)
 
 	  ("cd" "LOG ENTRY" entry (file+headline ,(my/org-file "10s6.logbook.org") "LOG")
-	   "* LOG ENTRY %T\n %?")
+	   "* LOG ENTRY %T\n %?" :unnarrowed t)
 
 	  ("ce" "LOG ENTRY" entry (file+headline ,(my/org-file "11s8.logbook.org") "LOG")
-	   "* LOG ENTRY %T\n %?")
+	   "* LOG ENTRY %T\n %?" :unnarrowed t)
 
 	  ("ck" "TODO" entry (file+headline ,(my/org-file "ks3.org") "TODO")
 	   "* TODO\s %?\s :ks3:")
@@ -115,4 +115,4 @@
 ;; ============================================================
 ;; TAGS
 ;; ============================================================
-(setq org-tag-alist '(("departmental" . ?d) ("teaching" . ?t) ("marking" . ?m)))
+(setq org-tag-alist '(("departmental" . ?d) ("teaching" . ?t) ("marking" . ?m) ("topics" . ?p) ("reprographics" . ?r)))
