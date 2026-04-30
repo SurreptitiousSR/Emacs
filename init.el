@@ -169,6 +169,8 @@
 ;; Start agenda from today, not Monday
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-format-date "%A %d %B %Y")
+;; Hide topics-tagged items from all agenda views by default
+(setq org-agenda-tag-filter-preset '("-topics"))
 ;; Hide empty time grid lines, keep the "now" indicator
 (setq org-agenda-use-time-grid t)
 (setq org-agenda-time-grid
@@ -271,10 +273,12 @@
         ("p" "Topic Progress"
          ((tags-todo "topics"
                      ((org-agenda-overriding-header "Topics — TODO")
-                      (org-agenda-prefix-format " %-16c ")))
+                      (org-agenda-prefix-format " %-16c ")
+                      (org-agenda-tag-filter-preset nil)))
           (tags "topics/DONE"
                 ((org-agenda-overriding-header "────────────────────────────────────────\nTopics — Completed")
-                 (org-agenda-prefix-format " %-16c ")))))
+                 (org-agenda-prefix-format " %-16c ")
+                 (org-agenda-tag-filter-preset nil)))))
         ("t" "TODOs by Tag"
          ((tags-todo "marking"
                      ((org-agenda-overriding-header "Marking")
