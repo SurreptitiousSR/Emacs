@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t -*-
+﻿;;; -*- lexical-binding: t -*-
 
 ;; ============================================================
 ;; OS-AWARE PATH CONFIGURATION
@@ -240,8 +240,8 @@
 ;; Custom agenda: 3-day view + upcoming items
 (setq org-agenda-custom-commands
       '(("n" "Agenda and all TODOs"
-         ((agenda "" ((org-agenda-span 3)))
-          (alltodo "" ((org-agenda-overriding-header "Upcoming")))))
+         ((agenda "" ((org-agenda-span 3) (org-agenda-tag-filter-preset (quote ("-topics")))))
+          (alltodo "-topics" ((org-agenda-overriding-header "Upcoming")))))
         ("m" "Marking"
          ((tags-todo "marking"
                      ((org-agenda-overriding-header "TODO")
@@ -256,7 +256,7 @@
                    (org-agenda-time-grid '((daily today)
                                            (800 900 1000 1100 1200 1300 1400 1500)
                                            "......" "----------------"))
-                   (org-agenda-tag-filter-preset '("-free"))
+                   (org-agenda-tag-filter-preset '("-free" "-topics"))
                    (org-agenda-overriding-header
                     (format "Today's Timetable — Week %s" (my/current-week)))))))
         ("w" "This week's timetable"
