@@ -21,6 +21,7 @@
 (add-to-list 'load-path "~/.emacs.d/config")
 
 (load "org-config")
+(load "gtd-config")
 (load "org-sync")
 (load "timetable-config")
 
@@ -297,7 +298,26 @@
                       (org-agenda-prefix-format " %-16c ")))
           (tags-todo "-marking-teaching-departmental-reprographics-topics"
                      ((org-agenda-overriding-header "────────────────────────────────────────\nGeneral")
-                      (org-agenda-prefix-format " %-16c ")))))))
+                      (org-agenda-prefix-format " %-16c ")))))
+        ("g" "GTD Review"
+         ((todo "TODO"
+                ((org-agenda-files (list (my/org-file "inbox.org")))
+                 (org-agenda-overriding-header "Inbox — process & refile")))
+          (agenda "" ((org-agenda-span 1)
+                      (org-agenda-overriding-header "Today")))
+          (todo "TODO"
+                ((org-agenda-files (list (my/org-file "teaching.org")
+                                         (my/org-file "departmental.org")
+                                         (my/org-file "homework.org")))
+                 (org-agenda-todo-ignore-scheduled 'all)
+                 (org-agenda-todo-ignore-deadlines 'all)
+                 (org-agenda-overriding-header "Next actions (unscheduled)")))
+          (todo "DELEGATED|BLOCKED"
+                ((org-agenda-overriding-header "Waiting / Blocked")))))
+        ("r" "Weekly Review"
+         ((agenda "" ((org-agenda-span 7) (org-agenda-start-on-weekday 1)))
+          (stuck "")
+          (todo "TODO" ((org-agenda-overriding-header "All open actions")))))))
 
 
 ;; Modify orgmode TODO states
@@ -314,8 +334,7 @@
 ;; AGENDA: RET opens logbook for lessons
 ;; ============================================================
 (defvar my/class-logbook-map
-  '(("11LS/" . "11s8.logbook.org")
-    ("10LS/" . "10s6.logbook.org")
+  '(("10LS/" . "10s6.logbook.org")
     ("7L/"   . "7l2.logbook.org")
     ("7S/"   . "7s2.logbook.org")
     ("9S/"   . "9s1.logbook.org"))
