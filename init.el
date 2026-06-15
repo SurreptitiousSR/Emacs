@@ -20,6 +20,7 @@
 ;; ============================================================
 (add-to-list 'load-path "~/.emacs.d/config")
 
+(load "performance-config")
 (load "org-config")
 (load "gtd-config")
 (load "org-sync")
@@ -200,7 +201,7 @@
         (let ((line-text (buffer-substring (line-beginning-position) (line-end-position))))
           ;; Rule 1: separator before timetable entries unless prev line starts with same time
           (when (and (looking-at "^\\s-*\\([0-9][0-9]:[0-9][0-9]\\)-[0-9][0-9]:[0-9][0-9]")
-                     (not (looking-back (regexp-quote my/agenda-separator) nil))
+                     (not (looking-back (regexp-quote my/agenda-separator) (line-beginning-position 0)))
                      (save-excursion
                        (forward-line -1)
                        (not (looking-at "^$\\|^[A-Z]\\|^ ─")))
@@ -212,7 +213,7 @@
             (insert my/agenda-separator))
           ;; Rule 3: blank before date headers
           (when (and (looking-at "^[A-Z]")
-                     (not (looking-back "\n\n" nil))
+                     (not (looking-back "\n\n" (line-beginning-position 0)))
                      (save-excursion
                        (forward-line -1)
                        (not (looking-at "^$\\|^[A-Z]\\|^ ─"))))
@@ -222,7 +223,7 @@
           (when (and (looking-at "^\\s-*\\([0-9][0-9]:[0-9][0-9]\\)")
                      (not (string-match-p "LOG ENTRY" line-text))
                      (not (looking-at "^\\s-*[0-9][0-9]:[0-9][0-9]-"))
-                     (not (looking-back (regexp-quote my/agenda-separator) nil))
+                     (not (looking-back (regexp-quote my/agenda-separator) (line-beginning-position 0)))
                      (save-excursion
                        (forward-line -1)
                        (not (looking-at "^$\\|^[A-Z]\\|^ ─")))
@@ -234,7 +235,7 @@
             (insert my/agenda-separator))
           ;; Rule 4: separator before deadline/overdue items (e.g. "40 d. ago:", "In 9 d.:", "Sched.")
           (when (and (looking-at "^\\s-*\\(In \\|[0-9]+ d\\. ago:\\|Sched\\.\\)")
-                     (not (looking-back (regexp-quote my/agenda-separator) nil))
+                     (not (looking-back (regexp-quote my/agenda-separator) (line-beginning-position 0)))
                      (save-excursion
                        (forward-line -1)
                        (not (looking-at "^$\\|^[A-Z]\\|^ ─\\|^\\s-*\\(In \\|[0-9]+ d\\. ago:\\|Sched\\.\\)"))))
