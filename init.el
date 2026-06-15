@@ -338,6 +338,7 @@
   '(("10LS/" . "10s6.logbook.org")
     ("7L/"   . "7l2.logbook.org")
     ("7S/"   . "7s2.logbook.org")
+    ("8S/"   . "8s3.logbook.org")
     ("9S/"   . "9s1.logbook.org"))
   "Maps class code patterns to logbook filenames for agenda RET.")
 
