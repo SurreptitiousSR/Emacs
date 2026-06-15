@@ -169,6 +169,9 @@
 ;; Start agenda from today, not Monday
 (setq org-agenda-start-on-weekday nil)
 (setq org-agenda-format-date "%A %d %B %Y")
+;; Hide the misaligned A/B timetable set in every agenda view.
+;; my/timetable-skip (timetable-config.el) is a no-op outside timetable.org.
+(setq org-agenda-skip-function-global '(my/timetable-skip))
 ;; Hide topics-tagged items from all agenda views by default
 (setq org-agenda-tag-filter-preset '("-topics"))
 ;; Hide empty time grid lines, keep the "now" indicator
