@@ -249,7 +249,10 @@
 (setq org-agenda-custom-commands
       '(("n" "Agenda and all TODOs"
          ((agenda "" ((org-agenda-span 3) (org-agenda-tag-filter-preset (quote ("-topics")))))
-          (alltodo "-topics" ((org-agenda-overriding-header "Upcoming")))))
+          ;; tags-todo, not alltodo: `alltodo' ignores its match argument, so
+          ;; the "-topics" here silently did nothing and scheme-of-work items
+          ;; showed up under Upcoming.
+          (tags-todo "-topics" ((org-agenda-overriding-header "Upcoming")))))
         ("m" "Marking"
          ((tags-todo "marking"
                      ((org-agenda-overriding-header "TODO")
@@ -319,7 +322,10 @@
         ("r" "Weekly Review"
          ((agenda "" ((org-agenda-span 7) (org-agenda-start-on-weekday 1)))
           (stuck "")
-          (todo "TODO" ((org-agenda-overriding-header "All open actions")))))))
+          ;; tags-todo rather than todo, so scheme-of-work items are excluded:
+          ;; `todo' matches a keyword and cannot filter on tags.
+          (tags-todo "-topics/TODO"
+                     ((org-agenda-overriding-header "All open actions")))))))
 
 
 ;; Modify orgmode TODO states
