@@ -279,15 +279,19 @@
                    (org-agenda-tag-filter-preset '("-free"))
                    (org-agenda-overriding-header
                     (format "Week %s Timetable" (my/current-week)))))))
+        ;; The global org-agenda-tag-filter-preset is '("-topics"), which would
+        ;; hide every item this view exists to show. Clearing it per-block does
+        ;; nothing: the filter is applied once to the finished buffer, long
+        ;; after per-block settings are unbound. It has to be cleared in the
+        ;; series-level settings below (the 4th element) to take effect.
         ("p" "Topic Progress"
          ((tags-todo "topics"
                      ((org-agenda-overriding-header "Topics — TODO")
-                      (org-agenda-prefix-format " %-16c ")
-                      (org-agenda-tag-filter-preset nil)))
+                      (org-agenda-prefix-format " %-16c ")))
           (tags "topics/DONE"
                 ((org-agenda-overriding-header "────────────────────────────────────────\nTopics — Completed")
-                 (org-agenda-prefix-format " %-16c ")
-                 (org-agenda-tag-filter-preset nil)))))
+                 (org-agenda-prefix-format " %-16c "))))
+         ((org-agenda-tag-filter-preset nil)))
         ("t" "TODOs by Tag"
          ((tags-todo "marking"
                      ((org-agenda-overriding-header "Marking")
