@@ -46,9 +46,15 @@
 
 (defun org-sync-after-save ()
   "Hook: debounce commit+push after saving an org file in `my/org-directory'."
+  ;; Compare case-insensitively on Windows: the filesystem is case-insensitive
+  ;; but `string-prefix-p' is not. `my/org-directory' says "C:/Users/SAttwell/"
+  ;; while the folder on disk is "sattwell", so a file opened via dired,
+  ;; recentf or find-file carries the on-disk casing and would silently fail
+  ;; this test - saving it would never trigger a sync.
   (when (and buffer-file-name
              (string-prefix-p (expand-file-name my/org-directory)
-                              (expand-file-name buffer-file-name)))
+                              (expand-file-name buffer-file-name)
+                              (memq system-type '(windows-nt ms-dos cygwin))))
     ;; Cancel any pending push timer and set a new one (2 second debounce)
     (when org-sync--push-timer
       (cancel-timer org-sync--push-timer))

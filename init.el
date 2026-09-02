@@ -99,6 +99,7 @@
 ;; Download all-the-icons
 (my-package-install 'all-the-icons)
 (my-package-install 'all-the-icons-dired)
+(my-package-install 'all-the-icons-ivy-rich)
 
 ;; Run all-the-icons
 (when (display-graphic-p)
@@ -335,11 +336,19 @@
 ;; AGENDA: RET opens logbook for lessons
 ;; ============================================================
 (defvar my/class-logbook-map
-  '(("10LS/" . "10s6.logbook.org")
-    ("7L/"   . "7l2.logbook.org")
-    ("7S/"   . "7s2.logbook.org")
-    ("8S/"   . "8s3.logbook.org")
-    ("9S/"   . "9s1.logbook.org"))
+  '(("10LS/"    . "10ls.logbook.org")
+    ("11LS/"    . "11ls.logbook.org")
+    ("7S/"      . "7s.logbook.org")
+    ("8S/"      . "8s.logbook.org")
+    ("8L/"      . "8l.logbook.org")
+    ("9L/"      . "9l.logbook.org")
+    ;; 7L and 9S are each split across two teaching groups, so these must
+    ;; match on the full code including the teacher. A bare "7L/" or "9S/"
+    ;; here would send both groups to the same logbook.
+    ("7L/ScMBN" . "7l-mbn.logbook.org")
+    ("7L/ScRDS" . "7l-rds.logbook.org")
+    ("9S/ScRDS" . "9s-rds.logbook.org")
+    ("9S/ScHUR" . "9s-hur.logbook.org"))
   "Maps class code patterns to logbook filenames for agenda RET.")
 
 (defun my/agenda-goto-or-logbook ()

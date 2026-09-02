@@ -8,5 +8,6 @@ elpy/
 org-persist/
 org-roam.db
 recentf
+recentf.eld
 snippets/
 transient/
